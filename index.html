@@ -1,106 +1,409 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Blocked</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-        }
-        .icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            background: #ff4757;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            color: white;
-            margin-bottom: 30px;
-        }
-        h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            color: #2d3436;
-        }
-        p {
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            color: #636e72;
-        }
-        .domain {
-            background: #f8f9fa;
-            border: 2px dashed #ddd;
-            border-radius: 10px;
-            padding: 15px;
-            font-family: monospace;
-            font-size: 18px;
-            color: #e17055;
-            margin: 20px 0;
-            word-break: break-all;
-        }
-        .footer {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            font-size: 14px;
-            color: #a4b0be;
-        }
-        @media (max-width: 600px) {
-            .container {
-                padding: 30px 20px;
-            }
-            h1 {
-                font-size: 24px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LCARS Security Block</title>
+  <style>
+    :root {
+      --bg: #0a0a14;
+      --panel: #11111c;
+      --text: #f6d6b8;
+      --muted: #c7a98d;
+      --orange: #f1a33c;
+      --peach: #f7c6a8;
+      --purple: #9b5de5;
+      --lavender: #c9a7ff;
+      --red: #d95c5c;
+      --line: #2b2b42;
+      --black: #000000;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top right, rgba(155, 93, 229, 0.18), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(241, 163, 60, 0.14), transparent 30%),
+        var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .screen {
+      width: min(1100px, 100%);
+      background: linear-gradient(180deg, rgba(17,17,28,0.98), rgba(10,10,20,0.98));
+      border: 2px solid var(--line);
+      border-radius: 28px;
+      box-shadow: 0 0 0 3px rgba(241, 163, 60, 0.08), 0 24px 60px rgba(0,0,0,0.45);
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 220px 1fr 180px;
+      gap: 14px;
+      align-items: stretch;
+      padding: 18px 18px 0;
+      background: #0d0d18;
+    }
+
+    .elbow,
+    .pill,
+    .tag,
+    .alert,
+    .domain,
+    .footer-block {
+      border-radius: 999px;
+    }
+
+    .elbow {
+      background: var(--orange);
+      min-height: 78px;
+      border-bottom-left-radius: 22px;
+      border-top-left-radius: 22px;
+      border-top-right-radius: 60px;
+      border-bottom-right-radius: 60px;
+      position: relative;
+    }
+
+    .elbow::after {
+      content: "";
+      position: absolute;
+      right: 14px;
+      top: 0;
+      width: 58px;
+      height: 100%;
+      background: var(--bg);
+      border-radius: 999px;
+    }
+
+    .top-center {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 78px;
+    }
+
+    .pill {
+      height: 100%;
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .pill.orange {
+      background: var(--orange);
+      color: var(--black);
+      flex: 1.3;
+    }
+
+    .pill.purple {
+      background: var(--purple);
+      color: #fff;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    .right-stack {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .tag {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--peach);
+      color: var(--black);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 0 12px;
+    }
+
+    .tag:last-child {
+      background: var(--lavender);
+    }
+
+    .body {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 20px;
+      padding: 20px 18px 18px;
+    }
+
+    .sidebar {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .side-chip {
+      border-radius: 22px;
+      padding: 14px 16px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--black);
+    }
+
+    .side-chip.orange { background: var(--orange); }
+    .side-chip.peach { background: var(--peach); }
+    .side-chip.purple { background: var(--purple); color: #fff; }
+    .side-chip.lavender { background: var(--lavender); }
+
+    .content {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 26px;
+    }
+
+    .alert {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--red);
+      color: #fff;
+      padding: 12px 18px;
+      margin-bottom: 18px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1;
+      margin-bottom: 14px;
+      color: var(--peach);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 70ch;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .domain-wrap {
+      margin: 20px 0 24px;
+    }
+
+    .label {
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--lavender);
+      margin-bottom: 10px;
+    }
+
+    .domain {
+      display: block;
+      width: 100%;
+      background: linear-gradient(90deg, var(--orange), var(--peach));
+      color: var(--black);
+      padding: 18px 22px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .panel {
+      background: #141426;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+    }
+
+    .panel-title {
+      color: var(--orange);
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .panel p {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .footer-block {
+      background: #18182b;
+      border: 1px solid var(--line);
+      padding: 12px 18px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .accent-line {
+      height: 10px;
+      margin-top: 18px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--purple) 0 18%, var(--orange) 18% 56%, var(--peach) 56% 100%);
+    }
+
+    @media (max-width: 900px) {
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .body {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .top-center {
+        flex-direction: column;
+      }
+
+      .pill {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .sidebar {
+        grid-template-columns: 1fr;
+      }
+
+      .content {
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="icon">🚫</div>
-        <h1>Access Blocked</h1>
-        <p>This site has been blocked by your network's ad blocker to protect privacy and security. It's likely an ad, tracker, or malicious domain.</p>
-        <div class="domain" id="blockedDomain">example-blocked.com</div>
-        <p>If you believe this is an error, contact your network admin.</p>
-        <div class="footer">
-            Protected by AdGuard Home
+  <main class="screen">
+    <section class="topbar">
+      <div class="elbow" aria-hidden="true"></div>
+
+      <div class="top-center">
+        <div class="pill orange">LCARS Network Security</div>
+        <div class="pill purple">Block Notice</div>
+      </div>
+
+      <div class="right-stack">
+        <div class="tag">HardShellStudio</div>
+        <div class="tag">Server Node</div>
+      </div>
+    </section>
+
+    <section class="body">
+      <aside class="sidebar">
+        <div class="side-chip orange">Security</div>
+        <div class="side-chip peach">DNS Filter</div>
+        <div class="side-chip purple">Unbound</div>
+        <div class="side-chip lavender">Pi-hole</div>
+        <div class="side-chip orange">Policy Lock</div>
+      </aside>
+
+      <section class="content">
+        <div class="alert">Access Restricted</div>
+
+        <h1>Connection Blocked</h1>
+
+        <p class="subtitle">
+          This request was intercepted by the HardShellStudio server filtering stack.
+          The target may match a blocked category such as advertising, tracking,
+          malware, telemetry, or another restricted domain class.
+        </p>
+
+        <div class="domain-wrap">
+          <div class="label">Target Domain</div>
+          <div class="domain" id="blockedDomain">unknown-domain.local</div>
         </div>
-    </div>
-    <script>
-        // Dynamically show the blocked domain from URL or referer
-        const urlParams = new URLSearchParams(window.location.search);
-        let domain = urlParams.get('domain') || document.referrer.split('/')[2] || 'unknown domain';
-        if (domain) {
-            document.getElementById('blockedDomain').textContent = domain;
-            document.title = `Blocked: ${domain}`;
-        }
-    </script>
+
+        <div class="grid">
+          <div class="panel">
+            <div class="panel-title">Reason</div>
+            <p>Traffic was denied by local resolver and blocklist policy.</p>
+          </div>
+          <div class="panel">
+            <div class="panel-title">Resolver Stack</div>
+            <p>HardShellStudio Server, Unbound recursive DNS, and Pi-hole filtering.</p>
+          </div>
+          <div class="panel">
+            <div class="panel-title">Action</div>
+            <p>If this domain is required, contact the system administrator for review.</p>
+          </div>
+        </div>
+
+        <div class="footer">
+          <div class="footer-block">Status: Policy Enforcement Active</div>
+          <div class="footer-block">Source: HardShellStudio DNS Control</div>
+        </div>
+
+        <div class="accent-line" aria-hidden="true"></div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const fromQuery = params.get('domain');
+
+    let fromReferrer = '';
+    try {
+      fromReferrer = document.referrer ? new URL(document.referrer).hostname : '';
+    } catch (e) {
+      fromReferrer = '';
+    }
+
+    const domain = fromQuery || fromReferrer || 'unknown domain';
+    document.getElementById('blockedDomain').textContent = domain;
+    document.title = `LCARS Blocked: ${domain}`;
+  </script>
 </body>
 </html>
